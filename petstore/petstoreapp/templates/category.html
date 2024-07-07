@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>PetStore</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/scroll.css' %}" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/49ddd94397.js" crossorigin="anonymous"></script>
+    <style>
+        .text-div {
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.514), rgba(0, 0, 0, 0));
+            margin-top: -40px;
+        }
+        .text{
+            margin-bottom: -30px;
+            color: #212529;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand text-white" href="#"><i class="fa-solid fa-paw fa-2x" style="margin-right: 2px; color:  black;"></i></a>
+            <a class="navbar-brand" href=""><strong>Petstore</strong></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'home' %}">All Pets</a></li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            {% for c in categories %}
+                            <li><a class="dropdown-item" href="{% url 'cat' c.id %}">{{c.category_name}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+                {% if request.user.first_name %}
+                <form class="d-flex">
+                    <a class="btn btn-outline-dark" href="{% url 'list' %}" type="submit">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span
+                            class="badge bg-dark text-white ms-1 rounded-pill">{{request.user.carts_set.all.count}}</span>
+                    </a>
+                    <button class="btn btn-outline-dark ms-3" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasWithBothOptions"
+                        aria-controls="offcanvasWithBothOptions">{{request.user.first_name}}</button>
+                    <a class="btn btn-outline-dark ms-3" href="{% url 'signout' %}">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </a>
+                </form>
+                {% else %}
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">Not Logged In</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'signin' %}">Sign-In</a></li>
+                            <li><a class="dropdown-item" href="{% url 'signup' %}">Sign-Up</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
+        aria-labelledby="offcanvasWithBothOptionsLabel">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">{{request.user.first_name}}</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul>
+                {% for i in address %}
+                <li>{{i.address}} <a href="{% url 'addelete' i.id %}" class="btn btn-outline-dark ms-3 m-1"><i
+                            class="fa-solid fa-trash"></i></a></li>
+                {% endfor %}
+            </ul>
+            <form action="{% url 'address' %}" method="POST">
+                {% csrf_token %}
+                <textarea name="address" id="address" cols="35" rows="5" placeholder="Address"></textarea><br>
+                <button class="btn btn-outline-dark mt-auto me-5 input-group-append" type="submit" id="button-addon1"
+                    data-mdb-ripple-color="dark">
+                    Save
+                </button>
+            </form>
+        </div>
+    </div>
+    {% block content %}
+    {% include 'header.html' %}
+    <section class="py-5">
+        <div class="container px-4 px-lg-5">
+            <div class="text-center">
+                <h1 class="display-5 fw-bolder">{{category}}</h1><br>
+            </div>
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                {% for pr in pets %}
+                <div class="col-lg-4 col-md-2 col-12 mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="{{pr.image.url}}" alt="..." />
+                        {% if pr.quantity == 0 %}
+                        <div class="text-center text-div">
+                            <p><strong>Out Of Stock</strong></p>
+                        </div>
+                        {% elif pr.quantity < 5 %} <div class="text-center text-div">
+                            <p><strong>Only {{pr.quantity}} items left</strong></p>
+                    </div>
+                    {%endif%}
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <h5 class="fw-bolder">{{pr.pet_breed}}</h5>
+                            {{pr.pet_age}}
+                            {{pr.price}}
+                        </div>
+                    </div>
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto"
+                                href="{% url 'detail' pr.id  %}">View Pet</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+        </div>
+    </section>
+    {% endblock %}
+    <footer class="py-5 bg-dark mt-5 mb-0">
+        <!-- <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; vishnunk02</p>
+        </div> -->
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+
+</html>

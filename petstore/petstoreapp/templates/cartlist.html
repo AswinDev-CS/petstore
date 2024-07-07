@@ -1,0 +1,97 @@
+{% extends 'index.html' %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/49ddd94397.js" crossorigin="anonymous"></script>
+    <title>Home</title>
+</head>
+
+<body>
+    <header>
+        {% include 'nav.html' %}
+    </header>
+    <main>
+        {% block content %}
+        <div class="container">
+            <div class="row">
+                <div class="col-10">
+                    <div class="container">
+                        <div class="row mt-5">
+                            {% if cartlist %}
+                            {% for pet in cartlist %}
+                            <div class="col-lg-6 col-md-12">
+                                <img src="{{pet.pet.image.url}}" class="rounded mx-auto d-block mb-5" style="width: 60%;"
+                                    alt="...">
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <h5 class="display-5 fw-bolder">{{pet.pet.pet_breed}}</h5>
+                                <p class="h5"><strong>Age:</strong>{{pet.pet_age}}</p>
+                                <p class="h5"><strong>Price:</strong>{{pet.pet.price}}</p>
+                                <p class="lead fw-normal text-dark-50 mb-0">{{pet.pet.description}}</p>
+                                <input readonly="true" class="btn btn-outline-dark mt-2 btn-sm"
+                                    placeholder="{{pet.quantity}}"><br>
+                                <a class="btn btn-outline-dark mt-2" href="{% url 'delete' pet.id %}" type="submit">
+                                    <i class="fa-solid fa-trash"></i>
+                                    Remove From Cart
+                                </a><br>
+                                <button class="btn btn-outline-dark mt-2 mb-2" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseWidthExample{{pet.pet.id}}" aria-expanded="false"
+                                    aria-controls="collapseWidthExample">
+                                    Place Order
+                                    <i class="fa-brands fa-first-order-alt"></i>
+                                </button>
+                                <div style="min-height: 120px; max-width:200px">
+                                    <div class="collapse collapse-horizontal" id="collapseWidthExample{{pet.pet.id}}">
+                                        <form method="POST" action="{% url 'order' pet.id %}">
+                                            {% csrf_token %}
+                                            <div class="dropdown">
+                                                <select class="form-select" id="shopDropdown" name="address">
+                                                    <option value="" selected disabled>Select an address</option>
+                                                    {% for i in address %}
+                                                    <option value="{{ i.address }}">{{ i.address }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-outline-dark mt-2" style="min-width:200px">Order</button>
+                                        </form>                                        
+                                    </div>
+                                </div>
+                            </div>
+                            {%endfor%}
+                            {%else%}
+                            <div class="col-lg-6 col-md-12">
+                                <h4 class="display-4 fw-bolder">Add Something To Cart</h4>
+                                <p class="lead fw-normal text-dark-50 mb-0">Cart Is Empty</p>
+                            </div>
+                            {%endif%}
+                        </div>
+                    </div>
+                </div>
+                {% if cartlist %}
+                <div class="col-2 mt-5">
+                    <div style="position: fixed;">
+                        <div class="card border rounded p-2">
+                            <p class="lead fw-bolder text-dark-50 mb-0">Cart Items</p>
+                            <hr>
+                            <p class="lead fw-normal text-dark-50 mb-0 mt-2"><strong>Total Items : </strong>{{sum}}
+                            <p class="lead fw-normal text-dark-50 mb-0 mt-2"><strong>Total Price : </strong>{{total}}
+    
+                        </div>
+                    </div>
+                </div>
+                {%endif%}
+            </div>
+        </div>
+        {% endblock %}
+    </main>
+</body>
+
+</html>

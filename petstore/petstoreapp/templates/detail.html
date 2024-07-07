@@ -1,0 +1,62 @@
+{% extends 'index.html' %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <title>Home</title>
+</head>
+
+<body>
+    <header>
+        {% include 'nav.html' %}
+    </header>
+    <main>
+        {% block content %}
+        <div class="container">
+            <div class="row mt-5">
+                <div class="col-lg-6 col-md-12">
+                    <img src="{{pet.image.url}}" class="rounded mx-auto d-block mb-5" style="width: 60%;" alt="...">
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    <h1 class="display-4 fw-bolder">{{pet.pet_breed}}</h1>
+                    <p class="h4"><strong>Age  : </strong>{{pet.pet_age}}</p>
+                    <p class="h4"><strong>Price :  </strong><i class="fa-solid fa-indian-rupee-sign"></i>  {{pet.price}}/-</p>
+                    <p class="lead fw-normal text-dark-50 mb-0">{{pet.description}}</p>
+                    <p class="h5"></p>
+                    {% if request.user.first_name %}
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="d-flex justify-content-center mt-5">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="input-group w-auto">
+                                    <input type="number" value="1" max="{{product.quantity}}" min="1" id="inp" class="rounded-start border border-1 inp" placeholder="Count"
+                                        aria-label="Example input" aria-describedby="button-addon1" name="count" />
+                                    <button class="btn btn-outline-dark mt-auto me-5 input-group-append" type="submit" id="button-addon1"
+                                        data-mdb-ripple-color="dark">
+                                        Add To Cart
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="d-grid gap-2">
+
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </main>
+</body>
+
+</html>

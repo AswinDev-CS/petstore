@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <title>Home</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        {% include 'nav.html' %}
+    </header>
+
+    {% if messages %}
+    {% for m in messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{m}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <main>
+        <div class="container">
+            <div class="row d-flex align-items-center justify-content-center">
+                {% for pr in pets %}
+                <div class="col-4">
+                    <div class="card mt-5" style="width: 18rem;">
+                        <img src="{{pr.image.url}}" class="card-img-top" alt="Phone">
+                        <div class="card-body">
+                            <h5 class="card-title">{{pr.pet_breed}}</h5>
+                            <p class="card-text"><strong>Age:</strong>{{pr.pet_age}}</p>
+                            <p class="card-text"><strong>Price:</strong>{{pr.price}}</p>
+                            <a href="{% url 'detail' pr.id  %}" class="btn btn-primary d-grid">View Pet</a>
+                        </div>
+                    </div>
+                </div>
+                {%endfor%}
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

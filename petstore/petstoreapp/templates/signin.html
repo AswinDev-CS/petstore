@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/log.css' %}">
+    <title>SignIn</title>
+</head>
+
+<body>
+    <section class="myform-area">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="form-area login-form" style="border-radius: 10px;">
+                        <div class="form-content text-center" style="background: url('https://img.freepik.com/free-photo/cute-animals-group-white-background_23-2150038562.jpg?size=626&ext=jpg&ga=GA1.1.1700460183.1708560000&semt=sph');">
+                        </div>
+                        <div class="form-input">
+                            <h2>Sign In Here</h2>
+                            <form method="POST">
+                                <div class="mt-5">
+                                    {% csrf_token %}
+                                    {{form}}
+                                </div>
+                                <div class="myform-button">
+                                    <button type="submit" class="myform-btn">Signin</button>
+                                </div>
+                                <center>
+                                    <p class="mt-3">dont have an account? <a href="{% url 'signup' %}">Signup</a></p>
+                                </center>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
